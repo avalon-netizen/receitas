@@ -1,4 +1,4 @@
-import { Ingredient } from "../entities/Ingredient"
+import { Ingredient } from "../entities/Ingredient.js"
 
 export type CreateIngredientDTO = {
   name: string

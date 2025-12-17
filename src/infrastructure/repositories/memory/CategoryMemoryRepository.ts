@@ -1,8 +1,9 @@
-import { Category } from "../../../domain/entities/Category"
+import { Category } from "../../../domain/entities/Category.js"
 import {
   CreateCategoryDTO,
   ICategoryRepository,
-} from "../../../domain/repositories/ICategoryRepository"
+} from "../../../domain/repositories/ICategoryRepository.js"
+import crypto from "node:crypto"
 
 export class CategoryMemoryRepository implements ICategoryRepository {
   private items: Category[] = []
@@ -24,7 +25,7 @@ export class CategoryMemoryRepository implements ICategoryRepository {
 
   async create(data: CreateCategoryDTO): Promise<Category> {
     const item: Category = {
-      id: require("crypto").randomUUID(),
+      id: crypto.randomUUID(),
       name: data.name,
       createdAt: new Date(),
     }

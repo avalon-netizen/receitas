@@ -1,14 +1,14 @@
 import express from "express"
-import { CategoryService } from "../../application/services/CategoryService"
-import { RecipeService } from "../../application/services/RecipeService"
-import { IngredientService } from "../../application/services/IngredientService"
-import { CategoryMemoryRepository } from "../../infrastructure/repositories/memory/CategoryMemoryRepository"
-import { IngredientMemoryRepository } from "../../infrastructure/repositories/memory/IngredientMemoryRepository"
-import { RecipeMemoryRepository } from "../../infrastructure/repositories/memory/RecipeMemoryRepository"
-import { categoriesRoutes } from "./routes/categories"
-import { recipesRoutes } from "./routes/recipes"
-import { ingredientsRoutes } from "./routes/ingredients"
-import { errorHandler } from "./middlewares/errorHandler"
+import { CategoryService } from "../../application/services/CategoryService.js"
+import { RecipeService } from "../../application/services/RecipeService.js"
+import { IngredientService } from "../../application/services/IngredientService.js"
+import { CategoryMemoryRepository } from "../../infrastructure/repositories/memory/CategoryMemoryRepository.js"
+import { IngredientMemoryRepository } from "../../infrastructure/repositories/memory/IngredientMemoryRepository.js"
+import { RecipeMemoryRepository } from "../../infrastructure/repositories/memory/RecipeMemoryRepository.js"
+import { categoriesRoutes } from "./routes/categories.js"
+import { recipesRoutes } from "./routes/recipes.js"
+import { ingredientsRoutes } from "./routes/ingredients.js"
+import { errorHandler } from "./middlewares/errorHandler.js"
 
 const app = express()
 app.use(express.json())
@@ -18,7 +18,11 @@ const ingredientRepository = new IngredientMemoryRepository()
 const recipeRepository = new RecipeMemoryRepository()
 
 const categoryService = new CategoryService(categoryRepository, recipeRepository)
-const recipeService = new RecipeService(recipeRepository, categoryRepository)
+const recipeService = new RecipeService(
+  recipeRepository,
+  categoryRepository,
+  ingredientRepository
+)
 const ingredientService = new IngredientService(ingredientRepository)
 
 app.use("/categories", categoriesRoutes(categoryService))

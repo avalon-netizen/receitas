@@ -1,9 +1,9 @@
-import { Recipe } from "../entities/Recipe"
+import { Recipe } from "../entities/Recipe.js"
 
 export type CreateRecipeDTO = {
   title: string
   description?: string
-  ingredients: { name: string; quantity: number; unit: string }[]
+  ingredients: { ingredientId: string; quantity: number; unit: string }[]
   steps: string[]
   categoryId: string
 }

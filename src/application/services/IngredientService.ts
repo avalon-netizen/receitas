@@ -1,5 +1,5 @@
-import { IIngredientRepository } from "../../domain/repositories/IIngredientRepository"
-import { Ingredient } from "../../domain/entities/Ingredient"
+import { IIngredientRepository } from "../../domain/repositories/IIngredientRepository.js"
+import { Ingredient } from "../../domain/entities/Ingredient.js"
  
 
 export class IngredientService {

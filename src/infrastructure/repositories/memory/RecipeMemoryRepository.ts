@@ -1,8 +1,9 @@
-import { Recipe } from "../../../domain/entities/Recipe"
+import { Recipe } from "../../../domain/entities/Recipe.js"
 import {
   CreateRecipeDTO,
   IRecipeRepository,
-} from "../../../domain/repositories/IRecipeRepository"
+} from "../../../domain/repositories/IRecipeRepository.js"
+import crypto from "node:crypto"
 
 export class RecipeMemoryRepository implements IRecipeRepository {
   private items: Recipe[] = []
@@ -21,7 +22,7 @@ export class RecipeMemoryRepository implements IRecipeRepository {
 
   async create(data: CreateRecipeDTO): Promise<Recipe> {
     const item: Recipe = {
-      id: require("crypto").randomUUID(),
+      id: crypto.randomUUID(),
       title: data.title,
       description: data.description,
       ingredients: [...data.ingredients],

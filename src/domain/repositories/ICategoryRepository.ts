@@ -1,4 +1,4 @@
-import { Category } from "../entities/Category"
+import { Category } from "../entities/Category.js"
 
 export type CreateCategoryDTO = {
   name: string

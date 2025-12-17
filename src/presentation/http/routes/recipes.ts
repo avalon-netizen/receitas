@@ -1,5 +1,5 @@
 import { Router } from "express"
-import { RecipeService } from "../../../application/services/RecipeService"
+import { RecipeService } from "../../../application/services/RecipeService.js"
 
 export function recipesRoutes(service: RecipeService) {
   const router = Router()
@@ -8,6 +8,7 @@ export function recipesRoutes(service: RecipeService) {
     try {
       const items = await service.list({
         categoryId: req.query.categoryId as string | undefined,
+        categoryName: req.query.categoryName as string | undefined,
         search: req.query.search as string | undefined,
       })
       res.json(items)

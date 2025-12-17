@@ -2,6 +2,7 @@
   "name": "receitas",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "main": "dist/presentation/http/server.js",
   "scripts": {
     "build": "tsc",

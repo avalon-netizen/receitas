@@ -1,6 +1,6 @@
-import { ICategoryRepository } from "../../domain/repositories/ICategoryRepository"
-import { IRecipeRepository } from "../../domain/repositories/IRecipeRepository"
-import { Category } from "../../domain/entities/Category"
+import { ICategoryRepository } from "../../domain/repositories/ICategoryRepository.js"
+import { IRecipeRepository } from "../../domain/repositories/IRecipeRepository.js"
+import { Category } from "../../domain/entities/Category.js"
  
 
 export class CategoryService {
