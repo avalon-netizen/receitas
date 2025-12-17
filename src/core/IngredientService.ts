@@ -1,8 +1,9 @@
 import crypto from "node:crypto"
 import { store } from "./store.js"
 import { Ingredient } from "./models.js"
+import { IIngredientService } from "./interfaces/IIngredientService.js"
 
-export class IngredientService {
+export class IngredientService implements IIngredientService {
   async list(): Promise<Ingredient[]> {
     return [...store.ingredients]
   }

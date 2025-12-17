@@ -1,0 +1,113 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+package "Core" {
+  package "Models" {
+    class Category {
+      +id: string
+      +name: string
+      +createdAt: Date
+    }
+
+    class Ingredient {
+      +id: string
+      +name: string
+      +createdAt: Date
+    }
+
+    class Recipe {
+      +id: string
+      +title: string
+      +description: string
+      +steps: string[]
+      +servings: number
+      +categoryId: string
+      +createdAt: Date
+    }
+
+    class RecipeIngredient {
+        +ingredientId: string
+        +quantity: number
+        +unit: string
+    }
+
+    Recipe "1" *-- "0..*" RecipeIngredient
+  }
+
+  package "Interfaces" {
+    interface ICategoryService {
+      +list(): Promise<Category[]>
+      +get(id: string): Promise<Category>
+      +findByName(name: string): Promise<Category | undefined>
+      +create(data: { name: string }): Promise<Category>
+      +update(id: string, data: { name?: string }): Promise<Category>
+      +delete(id: string): Promise<void>
+    }
+
+    interface IIngredientService {
+      +list(): Promise<Ingredient[]>
+      +get(id: string): Promise<Ingredient>
+      +findByName(name: string): Promise<Ingredient | undefined>
+      +create(data: { name: string }): Promise<Ingredient>
+      +update(id: string, data: { name?: string }): Promise<Ingredient>
+      +delete(id: string): Promise<void>
+    }
+
+    interface IRecipeService {
+      +list(filter?: Filter): Promise<Recipe[]>
+      +get(id: string): Promise<Recipe>
+      +create(input: CreateRecipeInput): Promise<Recipe>
+      +update(id: string, data: Partial<CreateRecipeInput>): Promise<Recipe>
+      +delete(id: string): Promise<void>
+    }
+  }
+
+  package "Store" {
+    object store {
+        +categories: Category[]
+        +ingredients: Ingredient[]
+        +recipes: Recipe[]
+    }
+  }
+
+  package "Services" {
+    class CategoryService implements ICategoryService {
+      ...
+    }
+
+    class IngredientService implements IIngredientService {
+      ...
+    }
+
+    class RecipeService implements IRecipeService {
+      -categoryService: CategoryService
+      -ingredientService: IngredientService
+      ...
+    }
+  }
+}
+
+package "Presentation" {
+    class Routes {
+        +categoryRoutes(service: ICategoryService)
+        +ingredientRoutes(service: IIngredientService)
+        +recipeRoutes(service: IRecipeService)
+    }
+}
+
+' Relationships
+RecipeService --> CategoryService : usa
+RecipeService --> IngredientService : usa
+
+CategoryService ..> store : acessa
+IngredientService ..> store : acessa
+RecipeService ..> store : acessa
+
+Recipe --> Category : referencia (categoryId)
+RecipeIngredient --> Ingredient : referencia (ingredientId)
+
+Routes ..> ICategoryService : depende de
+Routes ..> IIngredientService : depende de
+Routes ..> IRecipeService : depende de
+
+@enduml

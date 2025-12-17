@@ -1,19 +1,11 @@
 import crypto from "node:crypto"
 import { store } from "./store.js"
-import { Recipe } from "./models.js"
+import { Recipe, CreateRecipeInput } from "./models.js"
 import { CategoryService } from "./CategoryService.js"
 import { IngredientService } from "./IngredientService.js"
+import { IRecipeService } from "./interfaces/IRecipeService.js"
 
-type CreateRecipeInput = {
-  title: string
-  description?: string
-  ingredients: { name: string; quantity: number; unit: string }[]
-  steps: string[]
-  servings: number
-  categoryId: string
-}
-
-export class RecipeService {
+export class RecipeService implements IRecipeService {
   private categoryService = new CategoryService()
   private ingredientService = new IngredientService()
 

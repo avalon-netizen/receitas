@@ -1,8 +1,9 @@
 import crypto from "node:crypto"
 import { store } from "./store.js"
 import { Category } from "./models.js"
+import { ICategoryService } from "./interfaces/ICategoryService.js"
 
-export class CategoryService {
+export class CategoryService implements ICategoryService {
   async list(): Promise<Category[]> {
     return [...store.categories]
   }

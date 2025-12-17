@@ -1,7 +1,7 @@
 import { Router } from "express"
-import { CategoryService } from "../../../core/CategoryService.js"
+import { ICategoryService } from "../../../core/interfaces/ICategoryService.js"
 
-export function categoriesRoutes(service: CategoryService) {
+export function categoriesRoutes(service: ICategoryService) {
   const router = Router()
 
   router.get("/", async (_req, res, next) => {

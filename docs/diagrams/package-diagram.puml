@@ -1,0 +1,22 @@
+@startuml
+
+package "Camada de Apresentação" {
+    component "Rotas da API" as API
+    component "Configuração do Servidor" as Config
+}
+
+package "Camada Core" {
+    component "Serviços" as Services
+    component "Modelos" as Models
+    database "Store em Memória" as Store
+}
+
+API ..> Services : Chama métodos
+Config ..> API : Configura
+
+Services ..> Store : Lê/Escreve Dados
+Services ..> Models : Retorna/Aceita Tipos
+Store ..> Models : Armazena Objetos
+
+
+@enduml

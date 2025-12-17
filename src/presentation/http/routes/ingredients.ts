@@ -1,7 +1,7 @@
 import { Router } from "express"
-import { IngredientService } from "../../../core/IngredientService.js"
+import { IIngredientService } from "../../../core/interfaces/IIngredientService.js"
 
-export function ingredientsRoutes(service: IngredientService) {
+export function ingredientsRoutes(service: IIngredientService) {
   const router = Router()
 
   router.get("/", async (_req, res, next) => {

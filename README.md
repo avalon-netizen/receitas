@@ -21,13 +21,24 @@ Aplicação em camadas (SRP) construída com Node.js, TypeScript e Express, com 
   - Bloqueio de exclusão de Categoria quando houver Receitas relacionadas.
 
 ## Arquitetura Simplificada (2 Camadas)
-- `core`: Contém toda a lógica de negócio, modelos de dados e acesso aos dados (armazenamento em memória).
+- `core`: Contém toda a lógica de negócio, modelos de dados, interfaces e acesso aos dados (armazenamento em memória).
 - `presentation`: API HTTP (Express), rotas e configuração do servidor.
 
-- Referências úteis no código:
+O projeto aplica o princípio da **Inversão de Dependência (DIP)**:
+- A camada `presentation` depende de **interfaces** definidas no `core` (`ICategoryService`, etc.), e não das implementações concretas.
+- Isso desacopla as camadas e facilita testes e manutenção.
+
+### Estrutura do Código
 - Servidor e rotas: `src/presentation/http`.
-- Lógica de negócio (Services): `src/core/*Service.ts`.
+- Interfaces (Contratos): `src/core/interfaces`.
+- Implementação de Serviços: `src/core/*Service.ts`.
+- Modelos e DTOs: `src/core/models.ts`.
 - Dados em memória: `src/core/store.ts`.
+
+### Documentação Visual
+Diagramas UML estão disponíveis na pasta `docs/diagrams`:
+- `package-diagram.puml`: Visão geral das camadas e componentes.
+- `class-diagram.puml`: Detalhes das classes, interfaces e relacionamentos.
 
 ### Fluxo de Dados
 1. Requisição HTTP chega na `presentation`.

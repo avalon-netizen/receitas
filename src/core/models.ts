@@ -20,3 +20,12 @@ export type Recipe = {
   categoryId: string
   createdAt: Date
 }
+
+export type CreateRecipeInput = {
+  title: string
+  description?: string
+  ingredients: { name: string; quantity: number; unit: string }[]
+  steps: string[]
+  servings: number
+  categoryId: string
+}
