@@ -17,6 +17,21 @@ export function recipesRoutes(service: IRecipeService) {
     }
   })
 
+  // Escalonar porções: retorna apenas a receita escalonada (não persiste)
+  // GET /recipes/:id/scale?servings=8
+  router.get("/:id/scale", async (req, res, next) => {
+    try {
+      const servingsParam = req.query.servings
+      const servings = servingsParam ? Number(servingsParam) : NaN
+      if (!(servings > 0)) throw new Error("Query parameter 'servings' is required and must be greater than 0")
+
+      const scaled = await service.scale(req.params.id, servings)
+      res.json(scaled)
+    } catch (error) {
+      next(error)
+    }
+  })
+
   router.get("/:id", async (req, res, next) => {
     try {
       const item = await service.get(req.params.id)
