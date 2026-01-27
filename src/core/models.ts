@@ -29,3 +29,11 @@ export type CreateRecipeInput = {
   servings: number
   categoryId: string
 }
+
+// Geração de Lista de Compras Consolidada
+export type ShoppingListItem = {
+  ingredientId: string
+  name: string
+  unit: string
+  quantity: number
+}
