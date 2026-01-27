@@ -101,6 +101,41 @@ export class RecipeService implements IRecipeService {
     return recipe
   }
 
+  // --- NOVO: escalonar porções sem persistir a receita original
+  async scale(id: string, servings: number): Promise<Recipe> {
+    if (!(servings > 0)) throw new Error("Servings must be greater than 0")
+
+    // buscar receita (não alterar a stored recipe)
+    const recipe = store.recipes.find((r) => r.id === id)
+    if (!recipe) throw new Error("Recipe not found")
+
+    // fator de escala
+    const factor = servings / recipe.servings
+
+    // cria cópia profunda dos ingredientes com quantidades ajustadas
+    const scaledIngredients = recipe.ingredients.map((ing) => {
+      // ing: { ingredientId, quantity, unit }
+      const newQty = Number((ing.quantity * factor).toFixed(2)) // arredonda para 2 casas; ajusta se desejar outro comportamento
+      return {
+        ingredientId: ing.ingredientId,
+        quantity: newQty,
+        unit: ing.unit,
+      }
+    })
+
+    // cria nova receita (cópia) — NÃO altera o store
+    const scaledRecipe: Recipe = {
+      ...recipe,
+      id: recipe.id, // mantém id como referência (ou você pode gerar um novo id se preferir)
+      servings,
+      // substitui por ingredientes escalonados (cópia)
+      ingredients: scaledIngredients,
+      // createdAt: recipe.createdAt // mantém o createdAt do original (ou não)
+    }
+
+    return scaledRecipe
+  }
+
   async update(id: string, data: Partial<CreateRecipeInput>): Promise<Recipe> {
     const idx = store.recipes.findIndex(r => r.id === id)
     if (idx < 0) throw new Error("Recipe not found")
