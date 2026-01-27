@@ -1,15 +1,18 @@
 import { Router } from "express"
 import { IRecipeService } from "../../../core/interfaces/IRecipeService.js"
+import { RecipeStatus } from "../../../core/models.js"
 
 export function recipesRoutes(service: IRecipeService) {
   const router = Router()
 
   router.get("/", async (req, res, next) => {
     try {
+      const includeAll = req.query.all === "true"
       const items = await service.list({
         categoryId: req.query.categoryId as string | undefined,
         categoryName: req.query.categoryName as string | undefined,
         search: req.query.search as string | undefined,
+        status: includeAll ? "all" : RecipeStatus.Published,
       })
       res.json(items)
     } catch (error) {
@@ -74,6 +77,26 @@ export function recipesRoutes(service: IRecipeService) {
         categoryId: req.body.categoryId,
       })
       res.json(item)
+    } catch (error) {
+      next(error)
+    }
+  })
+
+  // PATCH /recipes/:id/publish
+  router.patch("/:id/publish", async (req, res, next) => {
+    try {
+      const published = await service.publish(req.params.id)
+      res.json(published)
+    } catch (error) {
+      next(error)
+    }
+  })
+
+  // PATCH /recipes/:id/archive
+  router.patch("/:id/archive", async (req, res, next) => {
+    try {
+      const archived = await service.archive(req.params.id)
+      res.json(archived)
     } catch (error) {
       next(error)
     }
