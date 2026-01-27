@@ -64,6 +64,20 @@ export function recipesRoutes(service: IRecipeService) {
     }
   })
 
+  router.post("/shopping-list", async (req, res, next) => {
+    try {
+      const recipeIds = req.body?.recipeIds
+      if (!Array.isArray(recipeIds)) {
+        throw new Error("Request body must contain 'recipeIds' array")
+      }
+
+      const list = await service.generateShoppingList(recipeIds)
+      res.json(list)
+    } catch (error) {
+      next(error)
+    }
+  })
+
   router.delete("/:id", async (req, res, next) => {
     try {
       await service.delete(req.params.id)
