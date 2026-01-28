@@ -13,6 +13,7 @@ Aplicação em camadas (SRP) construída com Node.js, TypeScript e Express, com 
 - Estrutura do projeto
 
 ## Visão Geral
+- adicionado:  Escalonamento Inteligente de Porções, Geração de Lista de Compras Consolidada e Estados da Receita.
 - CRUD de Categorias, Ingredientes e Receitas.
 - Busca e filtragem de receitas por `categoryId` e por texto (`search`).
 - Regras de negócio:
