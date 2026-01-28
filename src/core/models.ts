@@ -10,6 +10,12 @@ export type Ingredient = {
   createdAt: Date
 }
 
+export enum RecipeStatus {
+  Draft = "draft",
+  Published = "published",
+  Archived = "archived",
+}
+
 export type Recipe = {
   id: string
   title: string
@@ -19,6 +25,8 @@ export type Recipe = {
   servings: number
   categoryId: string
   createdAt: Date
+
+  status: RecipeStatus
 }
 
 export type CreateRecipeInput = {
@@ -28,4 +36,12 @@ export type CreateRecipeInput = {
   steps: string[]
   servings: number
   categoryId: string
+}
+
+// Geração de Lista de Compras Consolidada
+export type ShoppingListItem = {
+  ingredientId: string
+  name: string
+  unit: string
+  quantity: number
 }
