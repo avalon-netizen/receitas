@@ -20,6 +20,20 @@ export function recipesRoutes(service: IRecipeService) {
     }
   })
 
+  router.post("/shopping-list", async (req, res, next) => {
+    try {
+      const recipeIds = req.body?.recipeIds
+      if (!Array.isArray(recipeIds)) {
+        throw new Error("Request body must contain 'recipeIds' array")
+      }
+
+      const list = await service.generateShoppingList(recipeIds)
+      res.json(list)
+    } catch (error) {
+      next(error)
+    }
+  })
+
   // Escalonar porções: retorna apenas a receita escalonada (não persiste)
   // GET /recipes/:id/scale?servings=8
   router.get("/:id/scale", async (req, res, next) => {
@@ -51,10 +65,10 @@ export function recipesRoutes(service: IRecipeService) {
         description: req.body.description,
         ingredients: Array.isArray(req.body.ingredients)
           ? req.body.ingredients.map((i: any) => ({
-              name: String(i?.name ?? ""),
-              quantity: Number(i?.quantity ?? 0),
-              unit: String(i?.unit ?? ""),
-            }))
+            name: String(i?.name ?? ""),
+            quantity: Number(i?.quantity ?? 0),
+            unit: String(i?.unit ?? ""),
+          }))
           : [],
         steps: Array.isArray(req.body.steps) ? req.body.steps.map(String) : [],
         servings: Number(req.body.servings ?? 0),
@@ -82,16 +96,7 @@ export function recipesRoutes(service: IRecipeService) {
     }
   })
 
-  router.post("/shopping-list", async (req, res, next) => {
-    try {
-      const recipeIds = req.body?.recipeIds
-      if (!Array.isArray(recipeIds)) {
-        throw new Error("Request body must contain 'recipeIds' array")
-      }
-
-      const list = await service.generateShoppingList(recipeIds)
-      res.json(list)
-  // PATCH /recipes/:id/publish
+   // PATCH /recipes/:id/publish
   router.patch("/:id/publish", async (req, res, next) => {
     try {
       const published = await service.publish(req.params.id)
@@ -122,4 +127,3 @@ export function recipesRoutes(service: IRecipeService) {
 
   return router
 }
-
