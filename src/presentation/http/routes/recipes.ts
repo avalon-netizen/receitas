@@ -1,17 +1,35 @@
 import { Router } from "express"
 import { IRecipeService } from "../../../core/interfaces/IRecipeService.js"
+import { RecipeStatus } from "../../../core/models.js"
 
 export function recipesRoutes(service: IRecipeService) {
   const router = Router()
 
   router.get("/", async (req, res, next) => {
     try {
+      const includeAll = req.query.all === "true"
       const items = await service.list({
         categoryId: req.query.categoryId as string | undefined,
         categoryName: req.query.categoryName as string | undefined,
         search: req.query.search as string | undefined,
+        status: includeAll ? "all" : RecipeStatus.Published,
       })
       res.json(items)
+    } catch (error) {
+      next(error)
+    }
+  })
+
+  // Escalonar porções: retorna apenas a receita escalonada (não persiste)
+  // GET /recipes/:id/scale?servings=8
+  router.get("/:id/scale", async (req, res, next) => {
+    try {
+      const servingsParam = req.query.servings
+      const servings = servingsParam ? Number(servingsParam) : NaN
+      if (!(servings > 0)) throw new Error("Query parameter 'servings' is required and must be greater than 0")
+
+      const scaled = await service.scale(req.params.id, servings)
+      res.json(scaled)
     } catch (error) {
       next(error)
     }
@@ -73,6 +91,21 @@ export function recipesRoutes(service: IRecipeService) {
 
       const list = await service.generateShoppingList(recipeIds)
       res.json(list)
+  // PATCH /recipes/:id/publish
+  router.patch("/:id/publish", async (req, res, next) => {
+    try {
+      const published = await service.publish(req.params.id)
+      res.json(published)
+    } catch (error) {
+      next(error)
+    }
+  })
+
+  // PATCH /recipes/:id/archive
+  router.patch("/:id/archive", async (req, res, next) => {
+    try {
+      const archived = await service.archive(req.params.id)
+      res.json(archived)
     } catch (error) {
       next(error)
     }
