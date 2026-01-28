@@ -214,6 +214,54 @@ async update(id: string, data: Partial<CreateRecipeInput>): Promise<Recipe> {
     return updated
   }
 
+  async generateShoppingList(recipeIds: string[]) {
+    if (!Array.isArray(recipeIds) || recipeIds.length === 0) {
+      throw new Error("recipeIds must be a non-empty array")
+    }
+
+    const recipes = recipeIds.map((id) => store.recipes.find((r) => r.id === id))
+    const missing = recipeIds.filter((_, idx) => !recipes[idx])
+    if (missing.length > 0) {
+      throw new Error(`Recipe not found: ${missing.join(", ")}`)
+    }
+
+    const map = new Map<string, { ingredientId: string; unit: string; quantity: number }>()
+
+    for (const recipe of recipes) {
+      const ingList = (recipe as any).ingredients ?? []
+      for (const ing of ingList) {
+        const ingredientId = ing.ingredientId
+        const unit = ing.unit ?? ""
+        const qty = Number(ing.quantity ?? 0)
+        const key = `${ingredientId}::${unit}`
+
+        const existing = map.get(key)
+        if (existing) {
+          existing.quantity = existing.quantity + qty
+          map.set(key, existing)
+        } else {
+          map.set(key, { ingredientId, unit, quantity: qty })
+        }
+      }
+    }
+
+    const result: { ingredientId: string; name: string; unit: string; quantity: number }[] = []
+
+    for (const [, entry] of map) {
+      const ingredient = await this.ingredientService.get(entry.ingredientId)
+      result.push({
+        ingredientId: entry.ingredientId,
+        name: ingredient.name,
+        unit: entry.unit,
+        quantity: Number(entry.quantity.toFixed(2)),
+      })
+    }
+
+    result.sort((a, b) => a.name.localeCompare(b.name))
+
+    return result
+  }
+
   async delete(id: string): Promise<void> {
     const idx = store.recipes.findIndex(r => r.id === id)
     if (idx < 0) throw new Error("Recipe not found")
